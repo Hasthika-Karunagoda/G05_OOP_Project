@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Administrator Login</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>RockyToys</h1>
+    <nav>
+        <a href="/users/login">User login</a>
+        <a href="/users/register">Create customer account</a>
+    </nav>
+</header>
+<main class="container">
+    <section class="panel">
+        <h2>Administrator login</h2>
+        <p class="muted">This sign-in is separate from customer login.</p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form method="post" th:action="@{/admin/login}" th:object="${loginDTO}">
+            <label>Administrator email</label>
+            <input type="email" th:field="*{email}" required>
+            <label>Password</label>
+            <input type="password" th:field="*{password}" required>
+            <button type="submit">Sign in as administrator</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

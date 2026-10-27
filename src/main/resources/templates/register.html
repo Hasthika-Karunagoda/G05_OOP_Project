@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create account</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>RockyToys</h1>
+    <p>Little things. Big smiles.</p>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/users/register">Register</a>
+        <a href="/users/login">User login</a>
+        <a href="/admin/login">Admin login</a>
+    </nav>
+</header>
+<main class="container narrow">
+    <section class="panel">
+        <h1>Create your account</h1>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <form method="post" th:action="@{/users/register}" th:object="${registerDTO}">
+            <label>Full name<input th:field="*{fullName}" required></label>
+            <small class="error" th:errors="*{fullName}"></small>
+            <label>Email<input type="email" th:field="*{email}" required></label>
+            <small class="error" th:errors="*{email}"></small>
+            <label>Password (at least 6 characters)<input type="password" th:field="*{password}" minlength="6" required></label>
+            <small class="error" th:errors="*{password}"></small>
+            <label>Phone<input th:field="*{phone}"></label>
+            <label>Delivery address<textarea th:field="*{address}" rows="3"></textarea></label>
+            <button class="button" type="submit">Register</button>
+        </form>
+        <p>Already registered? <a th:href="@{/users/login}">Log in</a></p>
+    </section>
+</main>
+</body>
+</html>

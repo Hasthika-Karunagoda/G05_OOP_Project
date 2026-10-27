@@ -1,0 +1,169 @@
+/* Global Reset */
+* {
+    box-sizing: border-box;
+}
+
+/* Base Body Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #fffdf7;
+    color: #303030;
+}
+
+/* Header & Typography */
+header {
+    background: #00277c;
+    padding: 20px 24px;
+    border-bottom: 1px solid #0f82d8;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    color: #ffffff;
+}
+
+header p{
+    color: #ffffff;
+}
+
+nav {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+nav a,
+.button,
+button {
+    display: inline-block;
+    background: #000007;
+    color: #ffffff;
+    padding: 9px 13px;
+    border: 0;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+nav a:hover,
+.button:hover,
+button:hover {
+    background: #fb0202;
+}
+
+
+.container {
+    max-width: 1100px;
+    margin: 24px auto;
+    padding: 0 18px;
+}
+
+.panel {
+    background: #fff;
+    padding: 20px;
+    margin: 16px 0;
+    border: 1px solid #058ef1;
+    border-radius: 8px;
+}
+
+h2 {
+    margin-top: 0;
+}
+
+
+label {
+    display: block;
+    font-weight: 600;
+    margin: 10px 0 5px;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    max-width: 480px;
+    padding: 10px;
+    border: 1px solid #d7d7d7;
+    border-radius: 5px;
+    background: #fff;
+}
+
+form {
+    margin: 8px 0;
+}
+
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+
+.message {
+    background: #e8f7e9;
+    color: #245a2b;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.error {
+    background: #ffe8e8;
+    color: #8a2222;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 11px;
+    border-bottom: 1px solid #eee;
+}
+
+th {
+    background: #fff7d8;
+}
+
+td form {
+    display: inline-block;
+    margin: 0;
+}
+
+
+.muted {
+    color: #666;
+    font-size: .94rem;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+
+@media (max-width: 600px) {
+    header {
+        padding: 16px;
+    }
+    .container {
+        margin: 16px auto;
+    }
+    .panel {
+        padding: 14px;
+    }
+}

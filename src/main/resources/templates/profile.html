@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>RockyToys</h1>
+    <p>Little things. Big smiles.</p>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/users/register">Register</a>
+        <a href="/users/login">User login</a>
+        <a href="/admin/login">Admin login</a>
+    </nav>
+</header>
+<main class="container narrow">
+    <section class="panel">
+        <h1>Your profile</h1>
+        <p th:if="${message}" class="message" th:text="${message}"></p>
+        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <p>Email: <strong th:text="${user.email}"></strong></p>
+        <p>Role: <span class="tag" th:text="${user.role}"></span></p>
+        <form method="post" th:action="@{/users/profile}" th:object="${userUpdateDTO}">
+            <label>Full name<input th:field="*{fullName}" required></label>
+            <small class="error" th:errors="*{fullName}"></small>
+            <label>Phone<input th:field="*{phone}"></label>
+            <label>Address<textarea th:field="*{address}" rows="3"></textarea></label>
+            <label>New password (optional)<input type="password" th:field="*{newPassword}" minlength="6"></label>
+            <button class="button" type="submit">Save changes</button>
+        </form>
+        <form method="post" th:action="@{/users/delete}" class="top-gap">
+            <button class="button" type="submit">Delete my account</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>
