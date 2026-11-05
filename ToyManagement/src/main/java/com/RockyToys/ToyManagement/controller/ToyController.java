@@ -1,7 +1,7 @@
 package com.RockyToys.ToyManagement.controller;
 
-import com.RockyToys.Store.ToyManagement.dto.ToyDTO;
-import com.RockyToys.Store.ToyManagement.service.ToyService;
+import com.RockyToys.ToyManagement.dto.ToyDTO;
+import com.RockyToys.ToyManagement.service.ToyService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
 
-import com.RockyToys.Store.User.model.User;
+import com.RockyToys.User.model.User;
 
 @Controller
 @RequestMapping("/toys")

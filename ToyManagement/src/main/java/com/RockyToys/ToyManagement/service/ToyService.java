@@ -1,10 +1,10 @@
 package com.RockyToys.ToyManagement.service;
 
-import com.RockyToys.Store.Category.filehandling.CategoryFileHandler;
-import com.RockyToys.Store.ToyManagement.dsa.SelectionSort;
-import com.RockyToys.Store.ToyManagement.dto.ToyDTO;
-import com.RockyToys.Store.ToyManagement.filehandling.ToyFileHandler;
-import com.RockyToys.Store.ToyManagement.model.Toy;
+import com.RockyToys.Category.filehandling.CategoryFileHandler;
+import com.RockyToys.ToyManagement.dsa.SelectionSort;
+import com.RockyToys.ToyManagement.dto.ToyDTO;
+import com.RockyToys.ToyManagement.filehandling.ToyFileHandler;
+import com.RockyToys.ToyManagement.model.Toy;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
