@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Categories | RockyToys</title>
+    <style>
+        *{
+            box-sizing:border-box
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fffdf7;
+            color: #303030;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header{
+
+            background: #00277c;
+            padding: 20px 7%;
+            border-bottom: 1px solid #eadfba;
+        }
+
+        .header-content{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+
+        }
+        .header-content h1 {
+            width: auto;
+            margin: 0;
+            margin-right: auto;
+        }
+
+        header a{
+            display:inline-block;
+            background:#058ef1;
+            color:white;
+            text-decoration:none;
+            padding:10px 15px;
+            border-radius:5px;
+            margin:0px
+        }
+        main{
+            flex: 1;
+            width: 100%;
+            max-width:1000px;
+            margin:40px auto;
+            padding:0 20px
+        }
+        h1,h2{
+            color: #ffffff
+        }
+        .panel{
+            background:white;
+            border:1px solid #7d9ff3;
+            border-radius:10px;
+            padding:24px;
+            margin-bottom:22px
+        }
+        table{
+            width:100%;
+            border-collapse:collapse
+        }
+        th{background:#0a389c;
+            color:white;
+            text-align:left;
+            padding:12px
+        }
+        td{
+            padding:12px;
+            border-bottom:1px solid #d6e0fa
+        }
+        .table-wrap{overflow-x:auto}
+        footer{
+            background: #0a389c;
+            border-top: 1px solid #eadfba;
+            padding: 23px;
+            text-align: center;
+            margin-top: 55px;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class ="header-content">
+    <h1>RockyToys 🧸</h1>
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/toys}">Shop Toys</a>
+    <a th:href="@{/admin/categories}">Manage Categories</a>
+
+        <a th:href="@{/users/profile}"
+           th:if="${session.loggedInUser != null}">
+            My Profile
+        </a>
+
+        <a th:href="@{/users/login}"
+           th:if="${session.loggedInUser == null}">
+            Login
+        </a>
+
+        <a th:href="@{/users/register}"
+           th:if="${session.loggedInUser == null}">
+            Register
+        </a>
+
+        <a th:href="@{/users/logout}"
+           th:if="${session.loggedInUser != null}">
+            Logout
+        </a>
+
+        <a th:href="@{/admin/carts}"
+           th:if="${session.loggedInUser != null and session.loggedInUser.role == 'ADMIN'}">
+            Manage Carts
+        </a>
+    </div>
+</header>
+<main>
+    <h1>Shop by Category</h1>
+    <section class="panel">
+        <div class="table-wrap"><table>
+            <thead><tr><th>Category ID</th><th>Category</th><th>Description</th></tr></thead>
+            <tbody>
+            <tr th:each="category : ${categories}">
+                <td th:text="${category.categoryId}"></td>
+                <td th:text="${category.categoryName}"></td>
+                <td th:text="${category.description}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(categories)}"><td colspan="3">No categories have been added yet.</td></tr>
+            </tbody>
+        </table></div>
+    </section>
+</main>
+<footer>© 2026 RockyToys. Bringing Smiles Through Play! 🧸</footer>
+</body>
+</html>
