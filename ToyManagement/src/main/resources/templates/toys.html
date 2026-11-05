@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Toy Management | RockyToys</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fffdf7;
+            color: #303030;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #00277c;
+            padding: 20px 7%;
+            border-bottom: 1px solid #eadfba;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            background: #058ef1;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        nav a:hover {
+            background: #fb0202;
+        }
+
+        footer {
+            background: #0a389c;
+            border-top: 1px solid #eadfba;
+            padding: 23px;
+            text-align: center;
+            margin-top: 55px;
+            color: #ffffff;
+        }
+
+        .button,
+        .btn {
+            display: inline-block;
+            background: #7d9ff3;
+            color: #302b1b;
+            padding: 13px 23px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .button:hover,
+        .btn:hover {
+            background: #f37f7f;
+        }
+        main {
+            flex: 1;
+            width: 100%;
+        }
+
+        main a {
+            color: #0a389c;
+        }
+
+        main a.button,
+        main a.btn {
+            color: #302b1b;
+        }
+
+        main h1,
+        main h2,
+        main h3 {
+            color: #00277c;
+        }
+
+        .error,
+        .err {
+            color: #fb0202;
+        }
+
+        .message,
+        .msg {
+            color: #0a389c;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0a389c;
+            color: #ffffff;
+            text-align: left;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #d6e0fa;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .container.narrow {
+            max-width: 520px;
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid #7d9ff3;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .panel h1,
+        .panel h2 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+
+        input,
+        textarea {
+            display: block;
+            width: 100%;
+            margin-top: 6px;
+            padding: 10px;
+            border: 1px solid #7d9ff3;
+            border-radius: 5px;
+            font: inherit;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #0a389c;
+        }
+
+        small.error {
+            display: block;
+            margin: -8px 0 12px;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #058ef1;
+            color: #ffffff;
+            padding: 3px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .top-gap {
+            margin-top: 20px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .panel form input {
+            display: inline-block;
+            width: auto;
+            min-width: 200px;
+            margin: 0 8px 10px 0;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-content">
+
+        <h1 class="logo">RockyToys 🧸</h1>
+
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/toys}">Shop Toys</a>
+            <a th:href="@{/cart}">My Cart</a>
+
+            <a th:href="@{/users/profile}"
+               th:if="${session.loggedInUser != null}">
+                My Profile
+            </a>
+
+            <a th:href="@{/users/login}"
+               th:if="${session.loggedInUser == null}">
+                Login
+            </a>
+
+            <a th:href="@{/users/register}"
+               th:if="${session.loggedInUser == null}">
+                Register
+            </a>
+
+            <a th:href="@{/users/logout}"
+               th:if="${session.loggedInUser != null}">
+                Logout
+            </a>
+
+            <a th:href="@{/admin/carts}"
+               th:if="${session.loggedInUser != null and session.loggedInUser.role == 'ADMIN'}">
+                Manage Carts
+            </a>
+        </nav>
+
+    </div>
+</header>
+
+<main class="container">
+    <h1>Browse toys</h1>
+    <p th:if="${message}" class="msg" th:text="${message}"></p>
+    <p th:if="${error}" class="err" th:text="${error}"></p>
+
+    <section class="panel" th:if="${isAdmin}">
+        <h2>Add toy</h2>
+        <form method="post" action="/toys/add">
+            <input name="toyId" placeholder="Toy ID (e.g. T001)" required>
+            <input name="name" placeholder="Toy name" required>
+            <input name="description" placeholder="Description">
+            <input name="categoryId" placeholder="Category ID (e.g. CG001)" required>
+            <input name="price" type="number" min="0" step="0.01" placeholder="Price" required>
+            <input name="ageGroup" placeholder="Age group (e.g. 3-5)" required>
+            <button class="button" type="submit">Add toy</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Find toys</h2>
+        <form method="get" action="/toys">
+            <input name="q" placeholder="Search by toy ID or name" th:value="${q}">
+            <input name="categoryId" placeholder="Category ID filter" th:value="${categoryId}">
+            <button class="button" type="submit">Search / Filter</button>
+            <a class="button" href="/toys">Clear</a>
+            <a class="button" href="/toys/sort">Sort by age group</a>
+        </form>
+    </section>
+
+    <section class="panel">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Toy ID</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Age group</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="toy : ${toys}">
+                    <td th:text="${toy.toyId}"></td>
+                    <td th:text="${toy.name}"></td>
+                    <td th:text="${toy.description}"></td>
+                    <td th:text="${toy.categoryId}"></td>
+                    <td th:text="${toy.price}"></td>
+                    <td th:text="${toy.ageGroup}"></td>
+                    <td>
+                        <a th:href="@{/toys/{id}(id=${toy.toyId})}">View</a>
+                        <form th:if="${isAdmin}"
+                              th:action="@{/toys/delete/{id}(id=${toy.toyId})}"
+                              method="post"
+                              style="display:inline">
+                            <button class="button" type="submit" onclick="return confirm('Delete this toy?')">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(toys)}">
+                    <td colspan="7">No toys found.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+
+<footer>
+    <p>© 2026 RockyToys. All Rights Reserved.</p>
+    <p>Bringing Smiles Through Play! 🧸</p>
+</footer>
+
+</body>
+</html>
