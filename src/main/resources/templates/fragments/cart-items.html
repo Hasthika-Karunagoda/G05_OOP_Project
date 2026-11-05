@@ -1,0 +1,44 @@
+<div th:fragment="cartItems" xmlns:th="http://www.thymeleaf.org">
+    <section class="cart-items">
+        <h2>Cart Items</h2>
+
+
+        <p th:if="${cart == null or cart.cartItemList == null or #lists.isEmpty(cart.cartItemList)}">Your cart is empty.</p>
+
+        <table th:unless="${cart == null or cart.cartItemList == null or #lists.isEmpty(cart.cartItemList)}">
+            <thead>
+            <tr>
+                <th>Toy</th>
+                <th>Unit price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${cart.cartItemList}">
+                <td>
+                    <span th:text="${item.toyName}">Toy name</span>
+                    <br>
+                    <small style="color: #7d9ff3;" th:text="${item.toyId}">T001</small>
+                </td>
+                <td th:text="'Rs. ' + ${item.unitPrice}">0.00</td>
+                <td>
+                    <form th:action="@{/cart/items/{id}/update(id=${item.toyId})}" method="post" style="display: flex; gap: 5px; align-items: center; margin: 0;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:if="${_csrf}" />
+                        <input type="number" name="quantity" min="1" th:value="${item.quantity}" required style="width: 60px; padding: 5px; margin: 0;">
+                        <button class="btn" type="submit" style="padding: 5px 10px; font-size: 12px; background: #7d9ff3;">Update</button>
+                    </form>
+                </td>
+                <td th:text="'Rs. ' + ${item.totalAmount}">0.00</td>
+                <td>
+                    <form th:action="@{/cart/items/{id}/delete(id=${item.toyId})}" method="post" style="margin: 0;">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:if="${_csrf}" />
+                        <button class="btn" type="submit" onclick="return confirm('Remove this item?')" style="padding: 5px 10px; font-size: 12px; background: #f37f7f; color: white;">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</div>
