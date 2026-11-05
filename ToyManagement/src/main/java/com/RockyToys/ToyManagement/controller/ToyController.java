@@ -1,8 +1,7 @@
 package com.RockyToys.ToyManagement.controller;
 
-import com.RockyToys.ToyManagement.dto.ToyDTO;
-import com.RockyToys.ToyManagement.service.ToyService;
-//import com.RockyToys.User.model.User;
+import com.RockyToys.Store.ToyManagement.dto.ToyDTO;
+import com.RockyToys.Store.ToyManagement.service.ToyService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
+
+import com.RockyToys.Store.User.model.User;
 
 @Controller
 @RequestMapping("/toys")
@@ -25,7 +26,7 @@ public class ToyController {
             : toyService.searchToy(q));
         model.addAttribute("q", q == null ? "" : q);
         model.addAttribute("categoryId", categoryId == null ? "" : categoryId);
-        //model.addAttribute("isAdmin", isAdmin(session));
+        model.addAttribute("isAdmin", isAdmin(session));
         return "toys";
     }
 
@@ -33,7 +34,7 @@ public class ToyController {
     public String details(@PathVariable("id") String id, Model model, RedirectAttributes redirect, HttpSession session) {
         try {
             model.addAttribute("toy", toyService.readToy(id));
-            //model.addAttribute("isAdmin", isAdmin(session));
+            model.addAttribute("isAdmin", isAdmin(session));
             return "toy-details";
         } catch (IllegalArgumentException e) {
             redirect.addFlashAttribute("error", e.getMessage());
@@ -56,9 +57,9 @@ public class ToyController {
         @RequestParam String categoryId, @RequestParam BigDecimal price,
         @RequestParam String ageGroup, RedirectAttributes redirect, HttpSession session) {
 
-      //  if (!isAdmin(session)) {
-       //     return deny(redirect);
-       // }
+        if (!isAdmin(session)) {
+            return deny(redirect);
+        }
 
         try {
             toyService.addToy(new ToyDTO(toyId, name, description, categoryId, price, ageGroup));
@@ -73,9 +74,9 @@ public class ToyController {
         @RequestParam String categoryId, @RequestParam BigDecimal price,
         @RequestParam String ageGroup, RedirectAttributes redirect, HttpSession session) {
 
-       // if (!isAdmin(session)) {
-        //    return deny(redirect);
-       // }
+        if (!isAdmin(session)) {
+            return deny(redirect);
+        }
 
         try {
             toyService.updateToy(id, new ToyDTO(id, name, description, categoryId, price, ageGroup));
@@ -87,9 +88,9 @@ public class ToyController {
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable("id") String id, RedirectAttributes redirect, HttpSession session) {
 
-       // if (!isAdmin(session)) {
-          // return deny(redirect);
-      // }
+        if (!isAdmin(session)) {
+           return deny(redirect);
+       }
 
         try {
             toyService.deleteToy(id);
@@ -99,18 +100,18 @@ public class ToyController {
     }
 
 
-   // private boolean isAdmin(HttpSession session) {
-   //     User user = (User) session.getAttribute("loggedInUser");
-    //    return user != null && "ADMIN".equals(user.getRole());
-   // }
+    private boolean isAdmin(HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+        return user != null && "ADMIN".equals(user.getRole());
+    }
 
-  //  private String deny(RedirectAttributes redirect) {
-   //     redirect.addFlashAttribute(
-   //             "error",
-   //             "Only administrators can modify toys."
-    //    );
-    //    return "redirect:/toys";
-  //  }
+    private String deny(RedirectAttributes redirect) {
+        redirect.addFlashAttribute(
+                "error",
+                "Only administrators can modify toys."
+        );
+        return "redirect:/toys";
+    }
 
 
 }
