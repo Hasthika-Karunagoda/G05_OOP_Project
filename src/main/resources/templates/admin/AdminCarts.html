@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Carts | RockyToys</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fffdf7;
+            color: #303030;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #00277c;
+            padding: 20px 7%;
+            border-bottom: 1px solid #eadfba;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            background: #058ef1;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        nav a:hover {
+            background: #fb0202;
+        }
+
+        footer {
+            background: #0a389c;
+            border-top: 1px solid #eadfba;
+            padding: 23px;
+            text-align: center;
+            margin-top: 55px;
+            color: #ffffff;
+        }
+
+        .button,
+        .btn {
+            display: inline-block;
+            background: #7d9ff3;
+            color: #302b1b;
+            padding: 13px 23px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .button:hover,
+        .btn:hover {
+            background: #f37f7f;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+        }
+
+        main a {
+            color: #0a389c;
+        }
+
+        main a.button,
+        main a.btn {
+            color: #302b1b;
+        }
+
+        main h1,
+        main h2,
+        main h3 {
+            color: #00277c;
+        }
+
+        .error,
+        .err {
+            color: #fb0202;
+        }
+
+        .message,
+        .msg {
+            color: #0a389c;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0a389c;
+            color: #ffffff;
+            text-align: left;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #d6e0fa;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #7d9ff3;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .grid .card {
+            margin-bottom: 0;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #d6e0fa;
+            margin: 15px 0;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-content">
+
+        <h1 class="logo">RockyToys 🧸</h1>
+
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/toys}">Shop Toys</a>
+            <a th:href="@{/cart}">My Cart</a>
+
+            <a th:href="@{/users/profile}"
+               th:if="${session.loggedInUser != null}">
+                My Profile
+            </a>
+
+            <a th:href="@{/users/login}"
+               th:if="${session.loggedInUser == null}">
+                Login
+            </a>
+
+            <a th:href="@{/users/register}"
+               th:if="${session.loggedInUser == null}">
+                Register
+            </a>
+
+            <a th:href="@{/users/logout}"
+               th:if="${session.loggedInUser != null}">
+                Logout
+            </a>
+
+            <a th:href="@{/admin/carts}"
+               th:if="${session.loggedInUser != null and session.loggedInUser.role == 'ADMIN'}">
+                Manage Carts
+            </a>
+        </nav>
+
+    </div>
+</header>
+
+<main>
+    <h2>Manage Customer Carts</h2>
+    <p>View customer carts, quantities, and order totals.</p>
+
+    <p th:if="${error}" th:text="${error}"></p>
+
+    <div th:if="${carts == null or carts.isEmpty()}" class="card">
+        <h3>No Carts Available</h3>
+        <p>There are currently no customer carts to display.</p>
+    </div>
+
+    <div class="grid" th:if="${carts != null and !carts.isEmpty()}">
+
+        <section class="card" th:each="cart : ${carts}">
+
+            <h3>
+                Cart ID:
+                <span th:text="${cart.cartId}">CR001</span>
+            </h3>
+
+            <p>
+                <strong>Customer ID:</strong>
+                <span th:text="${cart.userId}">U001</span>
+            </p>
+
+            <p>
+                <strong>Date:</strong>
+                <span th:text="${cart.date}">Date</span>
+            </p>
+
+            <p>
+                <strong>Different Items:</strong>
+                <span th:text="${cart.totalCartItems}">0</span>
+            </p>
+
+            <p>
+                <strong>Total Quantity:</strong>
+                <span th:text="${cart.totalQuantity}">0</span>
+            </p>
+
+            <hr>
+
+            <h4>Cart Items</h4>
+
+            <div th:if="${cart.cartItemList == null or cart.cartItemList.isEmpty()}">
+                <p>This cart is empty.</p>
+            </div>
+
+            <div th:if="${cart.cartItemList != null and !cart.cartItemList.isEmpty()}">
+                <div th:each="item : ${cart.cartItemList}">
+                    <p>
+                        <strong th:text="${item.toyName}">Toy Name</strong>
+                    </p>
+
+                    <p>
+                        Toy ID:
+                        <span th:text="${item.toyId}">T001</span>
+                    </p>
+
+                    <p>
+                        Unit Price: Rs.
+                        <span th:text="${item.unitPrice}">0.00</span>
+                    </p>
+
+                    <p>
+                        Quantity:
+                        <span th:text="${item.quantity}">1</span>
+                    </p>
+
+                    <p>
+                        Item Total: Rs.
+                        <span th:text="${item.totalAmount}">0.00</span>
+                    </p>
+
+                    <hr>
+                </div>
+            </div>
+
+            <h4>
+                Subtotal: Rs.
+                <span th:text="${cart.subTotal}">0.00</span>
+            </h4>
+            <form th:action="@{/admin/carts/delete/{id}(id=${cart.cartId})}" method="post"
+                  onsubmit="return confirm('Are you sure you want to delete this customer cart?');">
+                <button type="submit" class="btn" style="background: #fb0202; color: #ffffff; width: 100%;">
+                    Delete Cart
+                </button>
+            </form>
+
+        </section>
+    </div>
+
+    <p>
+        <a class="btn" th:href="@{/toys}">Back to Toys</a>
+    </p>
+</main>
+
+
+<footer>
+    <p>© 2026 RockyToys. All Rights Reserved.</p>
+    <p>Bringing Smiles Through Play! 🧸</p>
+</footer>
+
+</body>
+</html>

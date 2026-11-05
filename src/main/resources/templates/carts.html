@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carts | RockyToys</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #fffdf7;
+            color: #303030;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: #00277c;
+            padding: 20px 7%;
+            border-bottom: 1px solid #eadfba;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: bold;
+            color: #ffffff;
+            margin: 0;
+        }
+
+        nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            background: #058ef1;
+            color: #ffffff;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        nav a:hover {
+            background: #fb0202;
+        }
+
+        footer {
+            background: #0a389c;
+            border-top: 1px solid #eadfba;
+            padding: 23px;
+            text-align: center;
+            margin-top: 55px;
+            color: #ffffff;
+        }
+
+        .button,
+        .btn {
+            display: inline-block;
+            background: #7d9ff3;
+            color: #302b1b;
+            padding: 13px 23px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .button:hover,
+        .btn:hover {
+            background: #f37f7f;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+        }
+
+        main a {
+            color: #0a389c;
+        }
+
+        main a.button,
+        main a.btn {
+            color: #302b1b;
+        }
+
+        main h1,
+        main h2,
+        main h3 {
+            color: #00277c;
+        }
+
+        .error,
+        .err {
+            color: #fb0202;
+        }
+
+        .message,
+        .msg {
+            color: #0a389c;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #0a389c;
+            color: #ffffff;
+            text-align: left;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #d6e0fa;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .card,
+        .cart-items {
+            background: white;
+            border: 1px solid #7d9ff3;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .cart-items h2 {
+            margin-top: 0;
+        }
+
+        td small {
+            display: block;
+            color: #666;
+        }
+
+        td form {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        td input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #7d9ff3;
+            border-radius: 5px;
+        }
+
+        td button {
+            background: #7d9ff3;
+            color: #302b1b;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        td button:hover {
+            background: #f37f7f;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="header-content">
+
+        <h1 class="logo">RockyToys 🧸</h1>
+
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/toys}">Shop Toys</a>
+            <a th:href="@{/cart}">My Cart</a>
+
+            <a th:href="@{/users/profile}"
+               th:if="${session.loggedInUser != null}">
+                My Profile
+            </a>
+
+            <a th:href="@{/users/login}"
+               th:if="${session.loggedInUser == null}">
+                Login
+            </a>
+
+            <a th:href="@{/users/register}"
+               th:if="${session.loggedInUser == null}">
+                Register
+            </a>
+
+            <a th:href="@{/users/logout}"
+               th:if="${session.loggedInUser != null}">
+                Logout
+            </a>
+
+            <a th:href="@{/admin/carts}"
+               th:if="${session.loggedInUser != null and session.loggedInUser.role == 'ADMIN'}">
+                Manage Carts
+            </a>
+        </nav>
+
+    </div>
+</header>
+
+<main>
+    <h2>Shopping Cart Summary</h2>
+    <p>View the active details for your current session below.</p>
+
+    <!-- Display message alerts if flash attributes are returned from controllers -->
+    <div th:if="${message}" class="card" style="border-color: #0a389c;">
+        <p class="msg" th:text="${message}"></p>
+    </div>
+    <div th:if="${error}" class="card" style="border-color: #fb0202;">
+        <p class="err" th:text="${error}"></p>
+    </div>
+
+    <!-- FIXED: Check target cart object model layer context explicitly -->
+    <div th:if="${cart == null}" class="card">
+        <h3>No Cart Found</h3>
+        <p>There are currently no items or active shopping cart structures initialized to display.</p>
+        <a class="btn" th:href="@{/toys}">Browse Toys</a>
+    </div>
+
+    <div th:if="${cart != null}">
+        <!-- Summary Cards Grid -->
+        <div class="card">
+            <table>
+                <thead>
+                <tr>
+                    <th>Cart ID</th>
+                    <th>Customer ID</th>
+                    <th>Date Created</th>
+                    <th>Subtotal (Rs.)</th>
+                    <th>Payable Amount (Rs.)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${cart.cartId}">CR001</td>
+                    <td th:text="${cart.userId}">U001</td>
+                    <td th:text="${#temporals.format(cart.date, 'yyyy-MM-dd HH:mm')} ?: ${cart.date}">Date</td>
+                    <td style="font-weight: bold;" th:text="${cart.subTotal}">0.00</td>
+                    <td style="font-weight: bold; color: #fb0202;" th:text="${cart.payableAmount}">0.00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Embedded Modular Fragment Rendering Target Block -->
+        <div th:replace="~{fragments/cart-items :: cartItems}"></div>
+    </div>
+
+    <p>
+        <a class="btn" th:href="@{/toys}">Continue Shopping</a>
+    </p>
+</main>
+
+<footer>
+    <p>© 2026 RockyToys. All Rights Reserved.</p>
+    <p>Bringing Smiles Through Play! 🧸</p>
+</footer>
+
+</body>
+</html>
